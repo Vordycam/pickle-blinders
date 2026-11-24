@@ -1437,7 +1437,7 @@
     if (r.losses === 0) return 'Unbeaten. Nobody found a way through.';
     // Winless comes before the volume compliment: an 0-8 night should get the
     // honest, encouraging line, not be told they played the most.
-    if (r.wins === 0) return 'Tough night on the scoreline - showing up is how it turns. See you Thursday.';
+    if (r.wins === 0) return 'Tough night on the scoreline - showing up is how it turns. See you on our next battle!';
     if (r.games === maxGames) return 'Most games played. Every court needs someone like that.';
     if (r.pct >= 0.6) return 'Winning more than you lose. Keep it rolling.';
     if (r.pct >= 0.4) return 'Right in the mix - a point here or there decides these.';

@@ -4,7 +4,7 @@
 /* Bump this whenever js/ or styles.css changes, or installed apps keep
    serving the old files from cache and never see the update. */
 var PREFIX = 'pblind-';
-var CACHE = PREFIX + 'v1';
+var CACHE = PREFIX + 'v2';
 var ASSETS = [
   './',
   './index.html',

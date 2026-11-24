@@ -421,7 +421,7 @@ test('standings: every row carries a note, podium notes are fixed, and all notes
     assert.ok([...r.note].every((ch) => ch.charCodeAt(0) < 128), `${r.id} note is ASCII: ${r.note}`);
   });
   // Bottom of the board still gets an encouraging line, not silence.
-  assert.match(b.ranked[b.ranked.length - 1].note, /See you Thursday/);
+  assert.match(b.ranked[b.ranked.length - 1].note, /See you on our next battle!/);
 });
 
 test('standings: same input, same output - screen and PDF cannot disagree', () => {
