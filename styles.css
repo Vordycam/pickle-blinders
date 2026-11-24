@@ -1,0 +1,744 @@
+/* Pickleball Rotation — high-contrast, touch-first styling */
+:root {
+  --green-dark: #14532d;
+  --green: #166534;
+  --accent: #ca8a04;
+  --ball: #eab308;
+  --bg: #f4f6f3;
+  --card: #ffffff;
+  --text: #1a2e22;
+  --muted: #5f7268;
+  --line: #d8e0d9;
+  --danger: #b91c1c;
+  --win: #15803d;
+  --radius: 14px;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 17px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ---------- Header ---------- */
+.app-header {
+  background: var(--green-dark);
+  color: #fff;
+  padding: max(10px, env(safe-area-inset-top)) 16px 0;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+.app-title { display: flex; align-items: center; gap: 10px; padding: 6px 0 10px; }
+.app-title h1 { font-size: 1.25rem; margin: 0; font-weight: 700; }
+.app-title .subtitle { font-size: .8rem; font-weight: 500; color: #cfe3d4; margin-left: 6px; }
+.logo-img {
+  width: 34px; height: 34px; border-radius: 50%;
+  object-fit: cover; flex: none; background: #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,.3);
+}
+.tabs { display: flex; gap: 4px; }
+.tab-btn {
+  flex: 1; padding: 12px 8px; font-size: 1rem; font-weight: 600;
+  background: transparent; color: #cfe3d4; border: none;
+  border-bottom: 3px solid transparent; cursor: pointer;
+}
+.tab-btn.active { color: #fff; border-bottom-color: var(--ball); }
+/* Four tabs on a narrow phone: "Tournament" must still fit on one line. */
+@media (max-width: 420px) { .tab-btn { font-size: .9rem; padding: 12px 4px; } }
+
+/* ---------- Layout ---------- */
+main { max-width: 760px; margin: 0 auto; padding: 14px 12px 90px; }
+.view { display: none; }
+.view.active { display: block; }
+
+.card {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 16px; margin-bottom: 14px;
+}
+.card h2 { margin: 0 0 12px; font-size: 1.15rem; }
+.card h3 { margin: 14px 0 8px; font-size: 1rem; }
+
+.muted { color: var(--muted); font-weight: 400; }
+.small-note { font-size: .85rem; margin: 8px 0 0; }
+.empty-state { text-align: center; padding: 40px 16px; }
+
+/* ---------- Buttons ---------- */
+.btn {
+  min-height: 44px; padding: 10px 18px; font-size: 1rem; font-weight: 600;
+  border-radius: 10px; border: 1px solid var(--line); background: #fff;
+  color: var(--text); cursor: pointer;
+}
+.btn:active { transform: scale(.97); }
+.btn.primary { background: var(--green); border-color: var(--green); color: #fff; }
+.btn.big { width: 100%; min-height: 54px; font-size: 1.1rem; margin-top: 10px; }
+.btn.small { min-height: 38px; padding: 6px 14px; font-size: .9rem; }
+.btn.danger-outline { color: var(--danger); border-color: #e5b5b5; background: #fff; }
+
+/* ---------- Session setup ---------- */
+.field { margin-bottom: 16px; }
+.field > label { display: block; font-weight: 600; margin-bottom: 8px; }
+.court-picker { display: flex; gap: 8px; flex-wrap: wrap; }
+.court-opt {
+  width: 52px; height: 52px; font-size: 1.2rem; font-weight: 700;
+  border-radius: 10px; border: 2px solid var(--line); background: #fff; cursor: pointer;
+}
+.court-opt.selected { border-color: var(--green); background: var(--green); color: #fff; }
+.setup-actions { display: flex; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
+.check-list {
+  max-height: 320px; overflow-y: auto; border: 1px solid var(--line);
+  border-radius: 10px; padding: 4px;
+}
+.check-row {
+  display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+  border-radius: 8px; cursor: pointer; min-height: 44px;
+}
+.check-row:hover { background: var(--bg); }
+.check-row input[type="checkbox"] { width: 22px; height: 22px; flex: none; }
+.check-name { flex: 1; font-weight: 600; }
+
+/* ---------- Active session ---------- */
+.session-bar {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  flex-wrap: wrap; background: var(--card); border: 1px solid var(--line);
+  border-radius: var(--radius); padding: 10px 14px; margin-bottom: 14px; font-size: .95rem;
+}
+.session-bar-actions { display: flex; gap: 8px; }
+
+.round-current { margin-bottom: 6px; }
+.round-head { display: flex; align-items: center; justify-content: space-between; margin: 4px 2px 10px; }
+.round-head h2 { margin: 0; }
+
+.round-past {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  margin-bottom: 10px; padding: 0 14px;
+}
+.round-past summary { padding: 12px 0; font-weight: 700; cursor: pointer; }
+.round-body { padding-bottom: 12px; }
+
+.match-card {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--radius);
+  padding: 12px 14px; margin-bottom: 10px;
+}
+.match-card.done { border-left: 5px solid var(--win); }
+.court-label {
+  font-size: .8rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase;
+  color: var(--green); margin-bottom: 6px;
+}
+.team-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 48px; }
+.team-names { font-size: 1.05rem; font-weight: 600; line-height: 1.35; }
+.team-row.winner .team-names { color: var(--win); }
+.win-tag {
+  background: var(--win); color: #fff; font-size: .7rem; font-weight: 800;
+  border-radius: 6px; padding: 2px 6px; vertical-align: middle;
+}
+.vs { text-align: center; color: var(--muted); font-size: .8rem; font-weight: 700; margin: 2px 0; }
+
+.score-ctl { display: flex; align-items: center; gap: 6px; flex: none; }
+.step-btn {
+  width: 46px; height: 46px; font-size: 1.5rem; font-weight: 700; line-height: 1;
+  border-radius: 10px; border: 1px solid var(--line); background: #fff; cursor: pointer;
+}
+.score-input {
+  width: 62px; height: 46px; text-align: center; font-size: 1.4rem; font-weight: 700;
+  border: 1px solid var(--line); border-radius: 10px; color: var(--text);
+}
+.score-input::-webkit-outer-spin-button, .score-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+.score-final { font-size: 1.6rem; font-weight: 800; min-width: 46px; text-align: center; }
+.match-footer { display: flex; justify-content: flex-end; margin-top: 8px; }
+.match-footer:empty { display: none; }
+
+.sitouts {
+  background: #fff8e6; border: 1px dashed #e5cd8a; border-radius: 10px;
+  padding: 10px 12px; margin: 4px 0 10px; font-size: .95rem;
+}
+.sitout-label { font-weight: 700; }
+.chip {
+  display: inline-block; background: #fff; border: 1px solid var(--line);
+  border-radius: 999px; padding: 3px 10px; margin: 2px; font-weight: 600; font-size: .9rem;
+}
+/* Waiting-list bands. A coloured left edge plus tint, so the band reads even
+   for colour-blind players who can compare edge thickness against the rest. */
+.chip-red    { border-color: #fca5a5; border-left: 5px solid var(--danger); background: #fee2e2; }
+.chip-yellow { border-color: #fde047; border-left: 5px solid var(--ball);   background: #fef9c3; }
+.chip-green  { border-color: #86efac; border-left: 5px solid var(--win);    background: #dcfce7; }
+.wait-time { font-weight: 700; font-variant-numeric: tabular-nums; }
+.legend { font-weight: 700; padding: 0 4px; border-radius: 4px; }
+.legend-red    { background: #fee2e2; color: var(--danger); }
+.legend-yellow { background: #fef9c3; color: #854d0e; }
+.legend-green  { background: #dcfce7; color: var(--win); }
+
+/* ---------- Standings: notes, podium, special mentions ---------- */
+.lb-note { display: block; font-size: .78rem; font-weight: 400; color: var(--muted); margin-top: 2px; line-height: 1.3; }
+table.lb tr.podium-1 td:first-child { color: var(--accent); font-weight: 800; }
+table.lb tr.podium-2 td:first-child,
+table.lb tr.podium-3 td:first-child { color: var(--green); font-weight: 800; }
+.mentions { margin-top: 14px; padding-top: 10px; border-top: 1px dashed var(--line); }
+.mentions h4 { margin: 0 0 2px; font-size: .95rem; }
+.mention { padding: 8px 6px; border-bottom: 1px solid var(--line); cursor: pointer; }
+.mention:hover { background: var(--bg); }
+
+/* ---------- Players ---------- */
+.add-player-form { display: flex; gap: 8px; flex-wrap: wrap; }
+.add-player-form input[type="text"] {
+  flex: 1 1 160px; min-height: 46px; font-size: 1rem; padding: 8px 12px;
+  border: 1px solid var(--line); border-radius: 10px;
+}
+.add-player-form select {
+  min-height: 46px; font-size: 1rem; padding: 8px; border: 1px solid var(--line);
+  border-radius: 10px; background: #fff;
+}
+.player-row {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 10px 4px; border-bottom: 1px solid var(--line); cursor: pointer; min-height: 52px;
+}
+.player-row:last-child { border-bottom: none; }
+.player-main { display: flex; flex-direction: column; gap: 2px; }
+.player-main .muted { font-size: .85rem; }
+.archived-list { margin-top: 12px; }
+.archived-list summary { color: var(--muted); cursor: pointer; padding: 8px 0; }
+.chev { font-size: 1.6rem; color: var(--muted); }
+
+/* ---------- Tables ---------- */
+.table-wrap { overflow-x: auto; }
+table.lb { width: 100%; border-collapse: collapse; font-size: .95rem; }
+table.lb th, table.lb td { padding: 8px 6px; text-align: center; border-bottom: 1px solid var(--line); }
+table.lb th { font-size: .75rem; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+table.lb td.td-name { text-align: left; font-weight: 600; }
+table.lb tbody tr { cursor: pointer; }
+table.lb tbody tr:hover { background: var(--bg); }
+
+/* ---------- Modal ---------- */
+.modal-backdrop {
+  position: fixed; inset: 0; background: rgba(10, 30, 18, .55);
+  display: flex; align-items: center; justify-content: center; z-index: 50; padding: 16px;
+}
+.modal {
+  background: #fff; border-radius: 16px; padding: 20px;
+  width: 100%; max-width: 480px; max-height: 85vh; overflow-y: auto;
+}
+.modal h2 { margin: 0 0 8px; }
+.modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; }
+.modal-actions .spacer { flex: 1; }
+.modal .field input, .modal .field select {
+  width: 100%; min-height: 46px; font-size: 1rem; padding: 8px 12px;
+  border: 1px solid var(--line); border-radius: 10px; background: #fff;
+}
+
+.stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 14px 0; }
+.stat-box { background: var(--bg); border-radius: 10px; padding: 10px 6px; text-align: center; }
+.stat-num { font-size: 1.15rem; font-weight: 800; }
+.stat-lbl { font-size: .7rem; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+.mini-row {
+  display: flex; justify-content: space-between; padding: 8px 2px;
+  border-bottom: 1px solid var(--line); font-size: .95rem;
+}
+.spark { width: 100%; height: 80px; background: var(--bg); border-radius: 10px; }
+.spark-range { font-size: .8rem; text-align: right; margin-top: 2px; }
+
+/* ---------- Toast ---------- */
+.toast {
+  position: fixed; bottom: max(20px, env(safe-area-inset-bottom)); left: 50%;
+  transform: translateX(-50%);
+  background: var(--green-dark); color: #fff; padding: 12px 20px;
+  border-radius: 999px; font-weight: 600; z-index: 100;
+  box-shadow: 0 4px 16px rgba(0,0,0,.25); max-width: 90vw; text-align: center;
+}
+
+/* ---------- Continuous court flow ---------- */
+.free-court { border-style: dashed; background: #fbfdf9; }
+.free-note { margin: 6px 0; }
+.match-footer { display: flex; justify-content: space-between; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+.match-footer-left { display: flex; gap: 6px; flex-wrap: wrap; }
+.matchup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.matchup-team h3 { margin: 0 0 8px; font-size: .95rem; }
+@media (max-width: 420px) { .matchup-grid { grid-template-columns: 1fr; } }
+.finished-list { padding-bottom: 10px; }
+.finished-row {
+  display: flex; align-items: center; gap: 10px; padding: 8px 2px;
+  border-bottom: 1px solid var(--line); font-size: .95rem;
+}
+.finished-row:last-child { border-bottom: none; }
+.finished-court { flex: none; font-weight: 700; }
+.finished-teams { flex: 1; line-height: 1.4; }
+.fin-win { color: var(--win); font-weight: 700; }
+
+@media (min-width: 700px) {
+  .courts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+}
+
+/* ---------- Fixed partners ---------- */
+.pair-tag {
+  display: inline-block; font-size: .65rem; font-weight: 800; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--green); background: #dcfce7;
+  border-radius: 6px; padding: 1px 6px; vertical-align: middle;
+}
+/* Held for a partner still on court: in the list, but not in the line. */
+.chip-held { border-style: dashed; color: var(--muted); background: #f8faf8; }
+.held-line { margin-top: 6px; }
+.pair-row {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 8px 4px; border-bottom: 1px solid var(--line); min-height: 48px;
+}
+.pair-names { font-weight: 600; }
+.pairs-none, .pairs-help { margin: 0 0 8px; }
+.pair-add { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+.pair-add select {
+  flex: 1 1 130px; min-height: 44px; font-size: 1rem; padding: 8px;
+  border: 1px solid var(--line); border-radius: 10px; background: #fff;
+}
+
+/* ---------- Match by skill ---------- */
+.btn.on { background: #dcfce7; border-color: #86efac; color: var(--green-dark); }
+/* Skill level beside a name, shown while matching by skill. */
+.lvl { font-size: .78em; font-weight: 700; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+/* ---------- Player photos & profile ---------- */
+.avatar {
+  width: 40px; height: 40px; border-radius: 50%; object-fit: cover; flex: none;
+  background: var(--bg); border: 1px solid var(--line);
+}
+.avatar-initials {
+  display: inline-flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: .85rem; color: var(--green); background: #dcfce7; border-color: #bbf7d0;
+}
+.avatar.big { width: 84px; height: 84px; font-size: 1.6rem; }
+.player-main { flex: 1; min-width: 0; }
+.profile-head { display: flex; align-items: center; gap: 14px; margin-bottom: 10px; }
+.profile-head h2 { margin: 0 0 2px; }
+.profile-head p { margin: 0; }
+.photo-edit { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+table.prog { width: 100%; border-collapse: collapse; font-size: .92rem; }
+table.prog th, table.prog td { padding: 7px 4px; text-align: right; border-bottom: 1px solid var(--line); white-space: nowrap; }
+table.prog th { font-size: .72rem; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+table.prog th:first-child, table.prog td:first-child { text-align: left; }
+.delta-up { color: var(--win); font-weight: 700; }
+.delta-down { color: var(--danger); font-weight: 700; }
+
+/* ---------- Tournament ---------- */
+.tour-intro { margin: 0 0 14px; }
+/* Check-in list grouped by division. */
+.division-group { padding: 2px 0 6px; }
+.division-group + .division-group { border-top: 1px solid var(--line); margin-top: 4px; }
+.division-head { padding: 8px 12px 2px; }
+.division-count.warn { color: var(--danger); font-weight: 600; }
+.division-empty { margin: 4px 12px 6px; }
+/* Live view: one pill per division, a badge on each court and result. */
+.division-strip { display: flex; gap: 8px; flex-wrap: wrap; margin: 0 0 12px; }
+.division-pill {
+  background: var(--card); border: 1px solid var(--line); border-radius: 999px;
+  padding: 4px 12px; font-weight: 700; font-size: .9rem;
+}
+.division-tag {
+  display: inline-block; font-size: .68rem; font-weight: 800; letter-spacing: .06em;
+  text-transform: uppercase; color: #fff; background: var(--green);
+  border-radius: 6px; padding: 2px 7px; vertical-align: middle;
+}
+.division-line-head { margin-bottom: 6px; }
+.tour-legend { margin: 0 0 12px; }
+/* Mixed-level pairs: the setup note under its checkbox, where a pair of
+   different levels plays, and room for one more button in the live bar. */
+.mixed-note { margin: 0 0 8px; }
+.pair-note { font-size: .8rem; font-weight: 500; color: var(--muted); }
+.pair-note.warn { color: var(--danger); font-weight: 600; }
+.tour-actions { flex-wrap: wrap; }
+
+/* ---------- Tournament format: by division, or two groups ---------- */
+:root { --blue: #1d4ed8; }
+.format-picker { display: flex; gap: 8px; flex-wrap: wrap; }
+.format-opt {
+  flex: 1 1 140px; min-height: 48px; padding: 8px 14px; font-size: 1rem; font-weight: 700;
+  border-radius: 10px; border: 2px solid var(--line); background: #fff; color: var(--text); cursor: pointer;
+}
+.format-opt.selected { border-color: var(--green); background: var(--green); color: #fff; }
+.format-note { margin: 8px 0 0; }
+/* Only the chosen format's controls are shown. */
+.tsetup.format-divisions .only-groups { display: none; }
+.tsetup.format-groups .only-divisions { display: none; }
+.tsetup.format-groups .division-count { display: none; }
+#tsetup-count.warn { color: var(--danger); font-weight: 600; }
+.group-names { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.group-names input {
+  flex: 1 1 120px; min-width: 0; min-height: 44px; font-size: 1rem; padding: 8px 12px;
+  border: 1px solid var(--line); border-radius: 10px;
+}
+/* The switch beside each name that puts a player in a group. */
+.group-pick {
+  display: inline-flex; flex: none; border: 1px solid var(--line); border-radius: 8px; overflow: hidden;
+}
+.grp-opt {
+  min-height: 34px; padding: 4px 10px; font-size: .8rem; font-weight: 700; border: none; background: #fff;
+  color: var(--muted); cursor: pointer; max-width: 92px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.grp-opt + .grp-opt { border-left: 1px solid var(--line); }
+.grp-opt.selected { color: #fff; }
+.grp-opt.selected[data-group="0"] { background: var(--green); }
+.grp-opt.selected[data-group="1"] { background: var(--blue); }
+/* Live: a tag per team, one colour per group, and the scoreboard. */
+.group-tag {
+  display: inline-block; font-size: .68rem; font-weight: 800; letter-spacing: .06em;
+  text-transform: uppercase; color: #fff; background: var(--green);
+  border-radius: 6px; padding: 2px 7px; vertical-align: middle; max-width: 140px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.group-tag.g1 { background: var(--blue); }
+.scoreboard { text-align: center; }
+.score-row { display: flex; align-items: center; justify-content: center; gap: 12px; }
+.score-side { flex: 1 1 0; min-width: 0; }
+.score-name { font-weight: 800; font-size: 1rem; overflow-wrap: anywhere; }
+.score-num { font-size: 2.6rem; font-weight: 900; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.score-side.g0 .score-num { color: var(--green); }
+.score-side.g1 .score-num { color: var(--blue); }
+.score-sub { font-size: .85rem; }
+.score-dash { font-size: 2rem; color: var(--muted); font-weight: 300; }
+.score-note { margin: 8px 0 0; }
+
+/* ---------- Game clocks ---------- */
+/* On the court label: how long the game has been on. */
+.game-time {
+  float: right; font-size: .85rem; font-weight: 700; letter-spacing: 0; text-transform: none;
+  color: var(--muted); font-variant-numeric: tabular-nums;
+}
+/* On a finished result: how long it took. */
+.fin-time { font-size: .8rem; font-weight: 500; }
+
+/* ---------- Update banner ---------- */
+.update-bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 90;
+  display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap;
+  background: var(--ball); color: var(--text); font-weight: 600;
+  padding: 10px 16px max(10px, env(safe-area-inset-bottom));
+  box-shadow: 0 -2px 10px rgba(0,0,0,.15);
+}
+.update-bar[hidden] { display: none; }
+
+/* ---------- Night in numbers, share, partners and opponents ---------- */
+/* A game running past twenty minutes. */
+.game-time.long { color: var(--danger); }
+.night-numbers { margin: 4px 0 10px; line-height: 1.45; }
+.recap-text {
+  width: 100%; font: inherit; font-size: .9rem; line-height: 1.4; padding: 10px;
+  border: 1px solid var(--line); border-radius: 10px; resize: vertical; white-space: pre-wrap; overflow: auto;
+}
+.companions h3 { margin: 14px 0 8px; font-size: 1rem; }
+.comp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: .95rem; }
+.comp-label { font-size: .72rem; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin-bottom: 4px; }
+.comp-row { display: flex; justify-content: space-between; gap: 8px; padding: 4px 0; border-bottom: 1px solid var(--line); }
+.comp-row:last-child { border-bottom: none; }
+.comp-name { font-weight: 600; }
+@media (max-width: 420px) { .comp-grid { grid-template-columns: 1fr; } }
+
+/* ---------- Round 3: form, backup note, period filter ---------- */
+.night-numbers { padding-left: 18px; }
+.night-numbers li { margin: 2px 0; }
+.form-line { margin: 0 0 6px; }
+.form-w, .form-l {
+  display: inline-block; min-width: 22px; text-align: center; font-weight: 800; font-size: .8rem;
+  border-radius: 6px; padding: 1px 4px; color: #fff;
+}
+.form-w { background: var(--win); }
+.form-l { background: #9ca3af; }
+.backup-note.warn { color: var(--danger); font-weight: 600; }
+.period-picker { display: flex; gap: 6px; flex-wrap: wrap; margin: 0 0 10px; }
+.period-opt {
+  min-height: 36px; padding: 4px 12px; font-size: .85rem; font-weight: 700;
+  border-radius: 999px; border: 1px solid var(--line); background: #fff; color: var(--muted); cursor: pointer;
+}
+.period-opt.selected { background: var(--green); border-color: var(--green); color: #fff; }
+
+/* ---------- Round 4: courts mid-session, saved games, level hint, name filter ---------- */
+/* The session bar's buttons wrap on a narrow phone instead of running off the card. */
+.session-bar-actions { flex-wrap: wrap; }
+.closing-note { font-size: .7rem; font-weight: 700; letter-spacing: 0; text-transform: none; color: var(--danger); }
+.modal .round-past { margin-top: 12px; }
+.level-hint { margin: 0 0 10px; padding: 8px 10px; background: #fff8e6; border: 1px dashed #e5cd8a; border-radius: 10px; }
+.row-filter {
+  flex: 1 1 150px; min-height: 38px; font-size: .95rem; padding: 6px 12px;
+  border: 1px solid var(--line); border-radius: 10px; background: #fff;
+}
+.check-row[hidden], .player-row[hidden] { display: none; }
+
+/* ---------- Round 5: notes, pasted names ---------- */
+.modal .field textarea {
+  width: 100%; font: inherit; font-size: 1rem; line-height: 1.4; padding: 8px 12px;
+  border: 1px solid var(--line); border-radius: 10px; background: #fff; resize: vertical;
+}
+.player-note {
+  margin: 0 0 10px; padding: 8px 10px; background: var(--bg); border-radius: 10px;
+  font-size: .95rem; line-height: 1.4; white-space: pre-wrap;
+}
+
+/* ---------- Round 6: session length, who plays next, appearance ---------- */
+.session-time { font-variant-numeric: tabular-nums; }
+.next-up { background: #eef6f0; border-color: #b7d3c0; }
+.vs-inline { color: var(--muted); font-size: .8rem; font-weight: 700; }
+.theme-btn {
+  margin-left: auto; flex: none; min-height: 32px; padding: 4px 12px; font-size: .75rem; font-weight: 700;
+  letter-spacing: .04em; border-radius: 999px; border: 1px solid rgba(255,255,255,.4);
+  background: rgba(255,255,255,.12); color: #fff; cursor: pointer;
+}
+
+/* ---------- Dark appearance ----------
+   Nothing above changes: every rule here applies only while the page
+   carries data-theme="dark", which index.html and the Light/Dark/Auto
+   button set. Surfaces go dark green-grey, text light, tints translucent. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --green: #1f8a4c;
+  --accent: #facc15;
+  --bg: #0e1712;
+  --card: #182319;
+  --text: #e8f0ea;
+  --muted: #a3b5aa;
+  --line: #2e3f34;
+  --danger: #f87171;
+  --win: #4ade80;
+  --blue: #3b82f6;
+}
+:root[data-theme="dark"] .btn,
+:root[data-theme="dark"] .court-opt,
+:root[data-theme="dark"] .step-btn,
+:root[data-theme="dark"] .score-input,
+:root[data-theme="dark"] .chip,
+:root[data-theme="dark"] .add-player-form input[type="text"],
+:root[data-theme="dark"] .add-player-form select,
+:root[data-theme="dark"] .modal,
+:root[data-theme="dark"] .modal .field input,
+:root[data-theme="dark"] .modal .field select,
+:root[data-theme="dark"] .modal .field textarea,
+:root[data-theme="dark"] .pair-add select,
+:root[data-theme="dark"] .format-opt,
+:root[data-theme="dark"] .grp-opt,
+:root[data-theme="dark"] .group-names input,
+:root[data-theme="dark"] .period-opt,
+:root[data-theme="dark"] .row-filter,
+:root[data-theme="dark"] .recap-text,
+:root[data-theme="dark"] .free-court,
+:root[data-theme="dark"] .chip-held,
+:root[data-theme="dark"] .division-pill { background: var(--card); color: var(--text); }
+:root[data-theme="dark"] .grp-opt, :root[data-theme="dark"] .period-opt { color: var(--muted); }
+:root[data-theme="dark"] .btn.primary,
+:root[data-theme="dark"] .court-opt.selected,
+:root[data-theme="dark"] .format-opt.selected,
+:root[data-theme="dark"] .period-opt.selected { background: var(--green); border-color: var(--green); color: #fff; }
+:root[data-theme="dark"] .btn.danger-outline { border-color: #7f1d1d; color: var(--danger); }
+:root[data-theme="dark"] .btn.on { background: rgba(74,222,128,.18); border-color: #2f6b45; color: #bbf7d0; }
+:root[data-theme="dark"] .grp-opt.selected { color: #fff; }
+:root[data-theme="dark"] .grp-opt.selected[data-group="0"] { background: var(--green); }
+:root[data-theme="dark"] .grp-opt.selected[data-group="1"] { background: #2563eb; }
+:root[data-theme="dark"] .group-tag.g1 { background: #2563eb; }
+:root[data-theme="dark"] .score-side.g1 .score-num { color: #60a5fa; }
+:root[data-theme="dark"] .sitouts, :root[data-theme="dark"] .level-hint { background: #241f0f; border-color: #5c4d1d; }
+:root[data-theme="dark"] .next-up { background: #13261b; border-color: #2f6b45; }
+:root[data-theme="dark"] .chip-red { border-color: #7f1d1d; background: rgba(248,113,113,.16); }
+:root[data-theme="dark"] .chip-yellow { border-color: #713f12; background: rgba(250,204,21,.14); }
+:root[data-theme="dark"] .chip-green { border-color: #166534; background: rgba(74,222,128,.14); }
+:root[data-theme="dark"] .legend-red { background: rgba(248,113,113,.18); }
+:root[data-theme="dark"] .legend-yellow { background: rgba(250,204,21,.18); color: #fde68a; }
+:root[data-theme="dark"] .legend-green { background: rgba(74,222,128,.18); }
+:root[data-theme="dark"] .pair-tag { background: rgba(74,222,128,.18); color: #86efac; }
+:root[data-theme="dark"] .avatar-initials { background: rgba(74,222,128,.18); border-color: #2f6b45; color: #86efac; }
+:root[data-theme="dark"] .court-label,
+:root[data-theme="dark"] table.lb tr.podium-2 td:first-child,
+:root[data-theme="dark"] table.lb tr.podium-3 td:first-child { color: #6ee7a0; }
+:root[data-theme="dark"] .win-tag, :root[data-theme="dark"] .form-w { color: #052e16; }
+:root[data-theme="dark"] .form-l { background: #4b5563; }
+:root[data-theme="dark"] .update-bar { color: #1a2e22; }
+:root[data-theme="dark"] .modal-backdrop { background: rgba(0, 0, 0, .62); }
+:root[data-theme="dark"] .logo-img { background: #fff; }
+
+/* =====================================================================
+   Pickle Blinders skin
+   Everything above is the layout the app has always had. This section
+   only repaints it: palette, comic lettering, hard edges and shadows.
+   Dark is the default look; Light and Auto stay on the header button.
+   ===================================================================== */
+@font-face {
+  font-family: 'Bangers';
+  src: url('fonts/Bangers-Regular.ttf') format('truetype');
+  font-display: swap;
+}
+
+:root {
+  --ink: #14160f;
+  --acid: #a3e635;
+  --hot: #ff6a00;
+  --sun: #ffc21a;
+  --cream: #fffdf5;
+  --display: 'Bangers', Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  --body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+  --green-dark: #14160f;
+  --green: #3d6b06;
+  --accent: #d9480f;
+  --ball: #ffc21a;
+  --bg: #efecdc;
+  --card: #fffdf5;
+  --text: #14160f;
+  --muted: #5a5f4e;
+  --line: #d3cfba;
+  --danger: #c81e1e;
+  --win: #2f7d0b;
+  --edge: #14160f;
+  --drop: #14160f;
+  --dot: rgba(20, 22, 15, .07);
+  --radius: 12px;
+}
+:root[data-theme="dark"] {
+  --green: #a3e635;
+  --accent: #ff8a3d;
+  --bg: #0d0f0a;
+  --card: #1b1e15;
+  --text: #f3f6e8;
+  --muted: #a6ad96;
+  --line: #343a2b;
+  --danger: #ff6b6b;
+  --win: #a3e635;
+  --edge: #4b543c;
+  --drop: #000;
+  --dot: rgba(163, 230, 53, .06);
+}
+
+html { background: var(--bg); }
+body {
+  background-color: var(--bg);
+  background-image: radial-gradient(var(--dot) 1.3px, transparent 1.7px);
+  background-size: 14px 14px;
+  min-height: 100vh;
+}
+
+/* ---------- Header ---------- */
+.app-header {
+  background:
+    repeating-linear-gradient(-45deg, rgba(255,255,255,.035) 0 10px, transparent 10px 20px),
+    var(--ink);
+}
+.app-header::after {
+  content: ''; display: block; height: 7px; margin: 0 -16px;
+  background: repeating-linear-gradient(-45deg, var(--sun) 0 12px, var(--ink) 12px 24px);
+}
+.app-title { gap: 12px; padding: 4px 0 8px; }
+.logo-img,
+:root[data-theme="dark"] .logo-img {
+  width: 58px; height: 58px; margin: -4px 0 -6px -4px; border-radius: 0; background: none; box-shadow: none;
+  object-fit: contain; transform: rotate(-6deg); filter: drop-shadow(2px 3px 0 rgba(0,0,0,.55));
+}
+.app-title h1 {
+  font-family: var(--display); font-weight: 400; font-size: 1.95rem; line-height: .95;
+  letter-spacing: .04em; color: var(--acid); text-shadow: 2px 2px 0 var(--hot);
+  transform: rotate(-2deg); transform-origin: left center; white-space: nowrap;
+}
+.app-title .subtitle {
+  display: block; margin: 4px 0 0; font-family: var(--body); font-size: .6rem; font-weight: 700;
+  letter-spacing: .14em; text-transform: uppercase; color: #c9cdb9; text-shadow: none; white-space: nowrap;
+}
+.theme-btn { border: 2px solid var(--acid); background: transparent; color: var(--acid); }
+.tabs { gap: 6px; }
+.tab-btn {
+  font-family: var(--display); font-weight: 400; font-size: 1.25rem; letter-spacing: .06em;
+  color: #b9bea8; padding: 9px 6px 7px; border-bottom-width: 0; border-radius: 9px 9px 0 0;
+}
+.tab-btn.active { color: var(--ink); background: var(--acid); }
+@media (max-width: 420px) {
+  .tab-btn { font-size: 1.05rem; padding: 9px 2px 7px; letter-spacing: .03em; }
+  .app-title h1 { font-size: 1.6rem; }
+  .app-title .subtitle { font-size: .52rem; letter-spacing: .1em; }
+  .logo-img, :root[data-theme="dark"] .logo-img { width: 50px; height: 50px; }
+}
+
+/* ---------- Surfaces ---------- */
+.card, .session-bar, .match-card, .round-past {
+  border-width: 2px; border-color: var(--edge); box-shadow: 4px 4px 0 var(--drop);
+}
+.modal { border: 2px solid var(--edge); box-shadow: 7px 7px 0 var(--drop); }
+.modal .round-past, .modal .card, .modal .match-card { box-shadow: none; }
+.card h2, .round-head h2, .modal h2, .empty-state h2 {
+  font-family: var(--display); font-weight: 400; font-size: 1.6rem; letter-spacing: .04em; line-height: 1.05;
+}
+.card h2 .muted, .round-head h2 .muted, .modal h2 .muted,
+.card h2 .btn, .card h2 small { font-family: var(--body); letter-spacing: 0; }
+.round-past summary { font-family: var(--display); font-weight: 400; font-size: 1.2rem; letter-spacing: .04em; }
+.round-past summary .muted { font-family: var(--body); font-size: .9rem; letter-spacing: 0; }
+.stat-box { border: 2px solid var(--line); }
+.empty-state::before {
+  content: ''; display: block; width: min(250px, 70%); aspect-ratio: 1; margin: -14px auto 6px;
+  background: url('logo-full.png') center / contain no-repeat;
+}
+
+/* ---------- Buttons and controls ---------- */
+.btn {
+  border: 2px solid var(--edge); background: var(--card); font-weight: 800;
+  box-shadow: 3px 3px 0 var(--drop); transition: transform .06s, box-shadow .06s;
+}
+.btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--drop); }
+.btn.small { box-shadow: 2px 2px 0 var(--drop); }
+.btn.small:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 var(--drop); }
+.btn.danger-outline, :root[data-theme="dark"] .btn.danger-outline { border-color: var(--danger); background: var(--card); }
+:root[data-theme] .btn.primary { background: var(--acid); border-color: var(--edge); color: var(--ink); }
+:root[data-theme] .btn.primary.big {
+  background: var(--hot); font-family: var(--display); font-weight: 400; font-size: 1.6rem;
+  letter-spacing: .07em; min-height: 58px; box-shadow: 5px 5px 0 var(--drop);
+}
+:root[data-theme] .btn.primary.big:active { transform: translate(3px, 3px); box-shadow: 2px 2px 0 var(--drop); }
+:root[data-theme="dark"] .btn.primary { border-color: var(--acid); }
+:root[data-theme="dark"] .btn.primary.big { border-color: var(--hot); box-shadow: 5px 5px 0 var(--acid); }
+:root[data-theme="dark"] .btn.primary.big:active { box-shadow: 2px 2px 0 var(--acid); }
+:root[data-theme] .court-opt.selected,
+:root[data-theme] .format-opt.selected,
+:root[data-theme] .period-opt.selected,
+:root[data-theme] .grp-opt.selected[data-group="0"] { background: var(--acid); border-color: var(--edge); color: var(--ink); }
+:root[data-theme="dark"] .court-opt.selected,
+:root[data-theme="dark"] .format-opt.selected,
+:root[data-theme="dark"] .period-opt.selected { border-color: var(--acid); }
+.court-opt, .format-opt, .step-btn, .score-input, .period-opt, .group-pick,
+.add-player-form input[type="text"], .add-player-form select, .pair-add select,
+.modal .field input, .modal .field select, .modal .field textarea,
+.group-names input, .row-filter, .recap-text, .check-list { border-width: 2px; border-color: var(--edge); }
+.court-opt, .score-final, .score-num, .stat-num { font-family: var(--display); font-weight: 400; letter-spacing: .03em; }
+.court-opt { font-size: 1.6rem; }
+.score-final { font-size: 2.1rem; }
+.score-num { font-size: 3.2rem; }
+.stat-num { font-size: 1.5rem; }
+.division-tag, .group-tag { background: var(--acid); color: var(--ink); }
+.group-tag.g1 { color: #fff; }
+input[type="checkbox"] { accent-color: var(--hot); }
+
+/* ---------- Courts ---------- */
+.match-card { border-left: 9px solid var(--acid); }
+.match-card.done { border-left: 9px solid var(--win); }
+.match-card.free-court { border-left-style: dashed; border-left-color: var(--edge); }
+.court-label { font-family: var(--display); font-weight: 400; font-size: 1.3rem; letter-spacing: .07em; }
+.court-label > * { font-family: var(--body); }
+.vs {
+  font-family: var(--display); font-weight: 400; font-size: 1.25rem; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--hot); margin: 0;
+}
+.win-tag {
+  display: inline-block; font-family: var(--display); font-weight: 400; font-size: .9rem; letter-spacing: .08em;
+  background: var(--hot); color: var(--ink); border: 2px solid var(--ink); border-radius: 5px;
+  padding: 0 6px; transform: rotate(-5deg); margin-left: 4px;
+}
+:root[data-theme="dark"] .win-tag { color: var(--ink); }
+.free-court, :root[data-theme="dark"] .free-court { background: transparent; }
+
+/* ---------- Bits ---------- */
+.toast {
+  background: var(--ink); color: var(--cream); border: 2px solid var(--acid); border-radius: 12px;
+  box-shadow: 4px 4px 0 rgba(0,0,0,.45);
+}
+.update-bar { background: var(--sun); color: var(--ink); border-top: 3px solid var(--ink); }
+.modal-backdrop { background: rgba(8, 9, 6, .7); }
+.next-up { background: #f1f7dc; border-color: var(--edge); }
+:root[data-theme="dark"] .next-up { background: #1c2410; border-color: var(--edge); }
+:root[data-theme="dark"] .sitouts, :root[data-theme="dark"] .level-hint { background: #241d0c; }
+:root[data-theme="dark"] .court-label,
+:root[data-theme="dark"] table.lb tr.podium-2 td:first-child,
+:root[data-theme="dark"] table.lb tr.podium-3 td:first-child { color: var(--acid); }
+:root[data-theme="dark"] .form-w { color: var(--ink); }
+table.lb th { border-bottom: 2px solid var(--edge); }

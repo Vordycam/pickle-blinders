@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Pickle Blinders Rotation and Progress Tracker</title>
+  <meta name="description" content="Pickle Blinders — fair player rotation and progress tracking for pickleball sessions. Works offline.">
+  <meta name="theme-color" content="#14160f">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Pickle Blinders">
+  <link rel="stylesheet" href="styles.css">
+  <script>
+    /* The appearance chosen on this device - dark unless set otherwise -
+       goes on before the first paint, so the page never flashes the wrong one. */
+    (function () {
+      var mode = 'dark';
+      try { mode = localStorage.getItem('pblind-theme') || 'dark'; } catch (e) {}
+      var dark = mode === 'dark' || (mode === 'auto' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+    })();
+  </script>
+</head>
+<body>
+  <header class="app-header">
+    <div class="app-title">
+      <img class="logo-img" src="logo.svg" alt="Pickle Blinders logo">
+      <h1>Pickle Blinders <span class="subtitle">Rotation &amp; Progress Tracker</span></h1>
+      <button class="theme-btn" data-action="cycle-theme" title="Appearance. Tap to change.">Dark</button>
+    </div>
+    <nav class="tabs" role="tablist">
+      <button class="tab-btn active" data-tab="play" role="tab">Play</button>
+      <button class="tab-btn" data-tab="tournament" role="tab">Tournament</button>
+      <button class="tab-btn" data-tab="players" role="tab">Players</button>
+      <button class="tab-btn" data-tab="stats" role="tab">Stats</button>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section id="view-play" class="view active"></section>
+    <section id="view-tournament" class="view"></section>
+    <section id="view-players" class="view"></section>
+    <section id="view-stats" class="view"></section>
+  </main>
+
+  <div id="modal-root"></div>
+  <div id="toast" class="toast" hidden></div>
+  <div id="update-bar" class="update-bar" hidden>
+    <span>A new version of Pickle Blinders is ready.</span>
+    <button class="btn small primary" data-action="reload-app">Reload</button>
+    <button class="btn small" data-action="dismiss-update">Later</button>
+  </div>
+
+  <script src="js/storage.js"></script>
+  <script src="js/engine.js"></script>
+  <script src="js/pdf.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+      window.addEventListener('load', function () {
+        // A page already under a service worker is running the files it
+        // loaded. When a new worker takes over, the next load would bring
+        // the new version; offer that reload instead of waiting for it.
+        var hadController = !!navigator.serviceWorker.controller;
+        navigator.serviceWorker.addEventListener('controllerchange', function () {
+          if (!hadController) return;
+          var bar = document.getElementById('update-bar');
+          if (bar) bar.hidden = false;
+        });
+        navigator.serviceWorker.register('sw.js').catch(function (err) {
+          console.warn('Service worker registration failed:', err);
+        });
+      });
+    }
+  </script>
+</body>
+</html>
